@@ -1,0 +1,59 @@
+<head>
+  <title>Date Format Validation</title>
+  <style>
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 4px;
+      display: none;
+    }
+    input.invalid {
+      border-color: red;
+    }
+    input.valid {
+      border-color: green;
+    }
+  </style>
+</head>
+<body>
+  <form id="dateForm" novalidate>
+    <label for="date">Date (DD/MM/YYYY):</label><br />
+    <input type="text" id="date" name="date" placeholder="DD/MM/YYYY" />
+    <div id="dateError" class="error-message">Please enter a valid date in DD/MM/YYYY format.</div>
+    <br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const dateInput = document.getElementById('date');
+    const dateError = document.getElementById('dateError');
+    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+
+    function validateDateFormat() {
+      const value = dateInput.value.trim();
+      if (dateRegex.test(value)) {
+        dateInput.classList.add('valid');
+        dateInput.classList.remove('invalid');
+        dateError.style.display = 'none';
+        return true;
+      } else {
+        dateInput.classList.add('invalid');
+        dateInput.classList.remove('valid');
+        dateError.style.display = 'block';
+        return false;
+      }
+    }
+
+    dateInput.addEventListener('input', validateDateFormat);
+
+    document.getElementById('dateForm').addEventListener('submit', e => {
+      if (!validateDateFormat()) {
+        e.preventDefault();
+        dateInput.focus();
+      } else {
+        alert('Form submitted successfully!');
+      }
+    });
+  </script>
+</body>
+</html>

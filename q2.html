@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Email Field Regex Validation</title>
+  <style>
+    #emailMessage {
+      font-size: 0.9em;
+      margin-top: 4px;
+    }
+    .error {
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <form id="emailForm" novalidate>
+    <label for="email">Email:</label><br />
+    <input type="email" id="email" name="email" />
+    <div id="emailMessage"></div>
+    <br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const emailInput = document.getElementById('email');
+    const emailMessage = document.getElementById('emailMessage');
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+    emailInput.addEventListener('blur', () => {
+      const value = emailInput.value.trim();
+      if (value === '') {
+        emailMessage.textContent = '';
+        emailMessage.className = '';
+        return;
+      }
+      if (emailRegex.test(value)) {
+        emailMessage.textContent = 'Valid email address.';
+        emailMessage.className = 'success';
+      } else {
+        emailMessage.textContent = 'Invalid email address.';
+        emailMessage.className = 'error';
+      }
+    });
+
+
+    document.getElementById('emailForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (emailRegex.test(emailInput.value.trim())) {
+        alert('Form submitted successfully with valid email!');
+      } else {
+        alert('Please enter a valid email before submitting.');
+        emailInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>

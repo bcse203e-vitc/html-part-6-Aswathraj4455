@@ -1,0 +1,165 @@
+<head>
+  <title>Dynamic Form Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 480px;
+      margin: 20px auto;
+      padding: 0 10px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+    }
+    input, select {
+      padding: 6px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 4px;
+    }
+    .input-group {
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.85em;
+      margin-top: 2px;
+      display: none;
+    }
+    input.invalid {
+      border-color: red;
+    }
+    input.valid {
+      border-color: green;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Dynamic Form Builder</h2>
+  <div>
+    <label for="inputTypeSelect">Select Input Type:</label>
+    <select id="inputTypeSelect">
+      <option value="">--Select Type--</option>
+      <option value="text">Text</option>
+      <option value="email">Email</option>
+      <option value="password">Password</option>
+    </select>
+    <button id="addInputBtn">Add</button>
+  </div>
+
+  <form id="dynamicForm" novalidate>
+    <h3>Generated Form Inputs</h3>
+    <div id="inputsContainer"></div>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const inputTypeSelect = document.getElementById('inputTypeSelect');
+    const addInputBtn = document.getElementById('addInputBtn');
+    const inputsContainer = document.getElementById('inputsContainer');
+    const form = document.getElementById('dynamicForm');
+    let inputCount = 0;
+
+    const regexMap = {
+      text: /^[a-zA-Z\s]+$/,
+      email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      password: /^(?=.*[A-Z])(?=.*\d).{8,}$/
+    };
+
+    addInputBtn.addEventListener('click', () => {
+      const selectedType = inputTypeSelect.value;
+      if (!selectedType) {
+        alert('Please select an input type');
+        return;
+      }
+
+      const inputId = `input${inputCount++}`;
+      const div = document.createElement('div');
+      div.className = 'input-group';
+
+      const label = document.createElement('label');
+      label.htmlFor = inputId;
+      label.textContent = `Enter ${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}:`;
+
+      const input = document.createElement('input');
+      input.type = selectedType === 'password' ? 'password' : 'text';
+      input.id = inputId;
+      input.name = inputId;
+      input.dataset.type = selectedType;
+      input.autocomplete = 'off';
+
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'error-message';
+      errorMessage.textContent = getErrorMessage(selectedType);
+
+      input.addEventListener('input', () => {
+        validateInput(input, errorMessage);
+      });
+
+      div.appendChild(label);
+      div.appendChild(input);
+      div.appendChild(errorMessage);
+      inputsContainer.appendChild(div);
+    });
+
+    function getErrorMessage(type) {
+      switch (type) {
+        case 'text':
+          return 'Only letters and spaces allowed.';
+        case 'email':
+          return 'Enter a valid email address.';
+        case 'password':
+          return 'Minimum 8 characters, at least 1 uppercase and 1 number.';
+        default:
+          return 'Invalid input.';
+      }
+    }
+
+    function validateInput(input, errorMessage) {
+      const type = input.dataset.type;
+      const regex = regexMap[type];
+      const value = input.value.trim();
+
+      if (value === '') {
+        input.classList.remove('valid', 'invalid');
+        errorMessage.style.display = 'none';
+        return false;
+      }
+      if (regex.test(value)) {
+        input.classList.add('valid');
+        input.classList.remove('invalid');
+        errorMessage.style.display = 'none';
+        return true;
+      } else {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        errorMessage.style.display = 'block';
+        return false;
+      }
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const inputs = inputsContainer.querySelectorAll('input');
+      let allValid = true;
+
+      inputs.forEach(input => {
+        const errorMessage = input.nextElementSibling;
+        const valid = validateInput(input, errorMessage);
+        if (!valid) allValid = false;
+      });
+
+      if (allValid) {
+        alert('Form submitted successfully!');
+      } else {
+        alert('Please fix errors before submitting.');
+      }
+    });
+  </script>
+</body>
+</html>

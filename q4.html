@@ -1,0 +1,105 @@
+<head>
+  <title>Dynamic Hobbies Form</title>
+  <style>
+    .hobby-input {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.85em;
+      margin-top: -6px;
+      margin-bottom: 10px;
+      display: none;
+    }
+    input.valid {
+      border-color: green;
+    }
+    input.invalid {
+      border-color: red;
+    }
+  </style>
+</head>
+<body>
+  <form id="hobbiesForm" novalidate>
+    <div id="hobbiesContainer">
+      <input type="text" class="hobby-input" name="hobby0" placeholder="Enter hobby" />
+      <div class="error-message">Only alphabets and spaces allowed.</div>
+    </div>
+    <button type="button" id="addHobbyBtn">Add Hobby</button>
+    <br /><br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const hobbiesContainer = document.getElementById('hobbiesContainer');
+    const addHobbyBtn = document.getElementById('addHobbyBtn');
+    const hobbyRegex = /^[A-Za-z\s]+$/;
+
+    function validateHobbyInput(input, errorDiv) {
+      if (input.value.trim() === '') {
+        input.classList.remove('valid');
+        input.classList.remove('invalid');
+        errorDiv.style.display = 'none';
+        return false;
+      }
+      if (hobbyRegex.test(input.value.trim())) {
+        input.classList.add('valid');
+        input.classList.remove('invalid');
+        errorDiv.style.display = 'none';
+        return true;
+      } else {
+        input.classList.remove('valid');
+        input.classList.add('invalid');
+        errorDiv.style.display = 'block';
+        return false;
+      }
+    }
+
+    function addHobbyField() {
+      const index = hobbiesContainer.children.length / 2; 
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = `hobby${index}`;
+      input.placeholder = 'Enter hobby';
+      input.className = 'hobby-input';
+
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error-message';
+      errorDiv.textContent = 'Only alphabets and spaces allowed.';
+      errorDiv.style.display = 'none';
+
+      input.addEventListener('input', () => {
+        validateHobbyInput(input, errorDiv);
+      });
+
+      hobbiesContainer.appendChild(input);
+      hobbiesContainer.appendChild(errorDiv);
+    }
+
+    document.querySelectorAll('.hobby-input').forEach((input, idx) => {
+      const errorDiv = hobbiesContainer.children[idx * 2 + 1];
+      input.addEventListener('input', () => validateHobbyInput(input, errorDiv));
+    });
+
+    addHobbyBtn.addEventListener('click', addHobbyField);
+
+    document.getElementById('hobbiesForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const inputs = hobbiesContainer.querySelectorAll('input.hobby-input');
+      let allValid = true;
+      inputs.forEach((input, idx) => {
+        const errorDiv = hobbiesContainer.children[idx * 2 + 1];
+        const valid = validateHobbyInput(input, errorDiv);
+        if (!valid) allValid = false;
+      });
+      if (allValid) {
+        alert('Form submitted successfully!');
+        
+      } else {
+        alert('Please fix errors before submitting.');
+      }
+    });
+  </script>
+</body>
+</html>

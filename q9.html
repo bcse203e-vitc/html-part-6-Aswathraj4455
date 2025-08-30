@@ -1,0 +1,65 @@
+<head>
+  <title>Dynamic Country Dropdown</title>
+  <style>
+    select {
+      padding: 6px;
+      margin: 8px 0;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <label for="continent">Select Continent:</label><br />
+    <select id="continent">
+      <option value="">--Choose Continent--</option>
+      <option value="Asia">Asia</option>
+      <option value="Europe">Europe</option>
+      <option value="NorthAmerica">North America</option>
+      <option value="SouthAmerica">South America</option>
+      <option value="Africa">Africa</option>
+      <option value="Oceania">Oceania</option>
+    </select>
+    <br />
+    <label for="country">Select Country:</label><br />
+    <select id="country" disabled>
+      <option value="">--Select Continent First--</option>
+    </select>
+  </form>
+
+  <script>
+    const continentCountryMap = {
+      Asia: ["China", "India", "Japan", "South Korea", "Indonesia"],
+      Europe: ["France", "Germany", "Italy", "United Kingdom", "Spain"],
+      NorthAmerica: ["United States", "Canada", "Mexico", "Cuba", "Panama"],
+      SouthAmerica: ["Brazil", "Argentina", "Chile", "Colombia", "Peru"],
+      Africa: ["Nigeria", "Egypt", "South Africa", "Kenya", "Morocco"],
+      Oceania: ["Australia", "New Zealand", "Fiji", "Papua New Guinea", "Samoa"]
+    };
+
+    const continentSelect = document.getElementById('continent');
+    const countrySelect = document.getElementById('country');
+
+    continentSelect.addEventListener('change', () => {
+      const continent = continentSelect.value;
+      countrySelect.innerHTML = '';
+      if (continent && continentCountryMap[continent]) {
+        const countries = continentCountryMap[continent];
+        countries.forEach(country => {
+          const option = document.createElement('option');
+          option.value = country;
+          option.textContent = country;
+          countrySelect.appendChild(option);
+        });
+        countrySelect.disabled = false;
+      } else {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = '--Select Continent First--';
+        countrySelect.appendChild(option);
+        countrySelect.disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>

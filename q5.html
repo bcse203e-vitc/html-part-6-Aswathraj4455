@@ -1,0 +1,62 @@
+<head>
+  <title>Password Match Validation</title>
+  <style>
+    #matchMessage {
+      font-size: 0.9em;
+      margin-top: 6px;
+    }
+    .match {
+      color: green;
+    }
+    .mismatch {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <form id="passwordForm" novalidate>
+    <label for="password">Password:</label><br />
+    <input type="password" id="password" name="password" /><br /><br />
+    <label for="confirmPassword">Confirm Password:</label><br />
+    <input type="password" id="confirmPassword" name="confirmPassword" />
+    <div id="matchMessage"></div>
+    <br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirmPassword');
+    const matchMessage = document.getElementById('matchMessage');
+
+    function checkPasswords() {
+      const pass = passwordInput.value;
+      const confirm = confirmInput.value;
+      if (pass === '' && confirm === '') {
+        matchMessage.textContent = '';
+        matchMessage.className = '';
+        return;
+      }
+      if (pass === confirm) {
+        matchMessage.textContent = 'Passwords match';
+        matchMessage.className = 'match';
+      } else {
+        matchMessage.textContent = 'Passwords do not match';
+        matchMessage.className = 'mismatch';
+      }
+    }
+
+    passwordInput.addEventListener('input', checkPasswords);
+    confirmInput.addEventListener('input', checkPasswords);
+
+    document.getElementById('passwordForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (passwordInput.value === confirmInput.value && passwordInput.value !== '') {
+        alert('Form submitted successfully!');
+      } else {
+        alert('Passwords do not match. Please correct!');
+      }
+    });
+  </script>
+</body>
+</html>

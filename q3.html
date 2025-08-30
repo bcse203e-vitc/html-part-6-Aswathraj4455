@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic Phone Number Validation</title>
+  <style>
+    #phoneMessage {
+      font-size: 0.9em;
+      margin-top: 4px;
+    }
+    .error {
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+    input:invalid {
+      border-color: red;
+    }
+    input:valid {
+      border-color: green;
+    }
+  </style>
+</head>
+<body>
+  <form id="phoneForm" novalidate>
+    <label for="phone">Phone Number:</label><br />
+    <input type="text" id="phone" name="phone" placeholder="(123) 456-7890 or 123-456-7890" />
+    <div id="phoneMessage"></div>
+    <br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const phoneInput = document.getElementById('phone');
+    const phoneMessage = document.getElementById('phoneMessage');
+
+    const phoneRegex = /^(\(\d{3}\)\s|\d{3}-)\d{3}-\d{4}$/;
+
+    phoneInput.addEventListener('input', () => {
+      const value = phoneInput.value.trim();
+      if (value === '') {
+        phoneMessage.textContent = '';
+        phoneMessage.className = '';
+        phoneInput.setCustomValidity('');
+        return;
+      }
+      if (phoneRegex.test(value)) {
+        phoneMessage.textContent = 'Valid phone number.';
+        phoneMessage.className = 'success';
+        phoneInput.setCustomValidity('');
+      } else {
+        phoneMessage.textContent = 'Invalid phone number format.';
+        phoneMessage.className = 'error';
+        phoneInput.setCustomValidity('Invalid phone number format.');
+      }
+    });
+
+    document.getElementById('phoneForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (phoneRegex.test(phoneInput.value.trim())) {
+        alert('Form submitted successfully with valid phone number!');
+      } else {
+        alert('Please enter a valid phone number before submitting.');
+        phoneInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>

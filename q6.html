@@ -1,0 +1,59 @@
+<head>
+  <title>Username Validation Form</title>
+  <style>
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 4px;
+      display: none;
+    }
+    input.invalid {
+      border-color: red;
+    }
+    input.valid {
+      border-color: green;
+    }
+  </style>
+</head>
+<body>
+  <form id="usernameForm" novalidate>
+    <label for="username">Username:</label><br />
+    <input type="text" id="username" name="username" />
+    <div id="usernameError" class="error-message">Username must be 3-16 characters, letters, numbers, or underscores only.</div>
+    <br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const usernameInput = document.getElementById('username');
+    const usernameError = document.getElementById('usernameError');
+    const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
+
+    function validateUsername() {
+      const value = usernameInput.value.trim();
+      if (usernameRegex.test(value)) {
+        usernameInput.classList.add('valid');
+        usernameInput.classList.remove('invalid');
+        usernameError.style.display = 'none';
+        return true;
+      } else {
+        usernameInput.classList.add('invalid');
+        usernameInput.classList.remove('valid');
+        usernameError.style.display = 'block';
+        return false;
+      }
+    }
+
+    usernameInput.addEventListener('input', validateUsername);
+
+    document.getElementById('usernameForm').addEventListener('submit', e => {
+      if (!validateUsername()) {
+        e.preventDefault();
+        usernameInput.focus();
+      } else {
+        alert('Form submitted successfully!');
+      }
+    });
+  </script>
+</body>
+</html>

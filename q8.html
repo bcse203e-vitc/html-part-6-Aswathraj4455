@@ -1,0 +1,61 @@
+<head>
+  <title>Hex Color Code Validation with Live Preview</title>
+  <style>
+    #colorPreview {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+      margin-left: 10px;
+      border: 1px solid #ccc;
+      background-color: transparent;
+    }
+    #colorInput.invalid {
+      border-color: red;
+    }
+    #colorInput.valid {
+      border-color: green;
+    }
+  </style>
+</head>
+<body>
+  <form id="colorForm" novalidate>
+    <label for="colorInput">Hex Color Code:</label><br />
+    <input type="text" id="colorInput" name="colorInput" placeholder="#FFF or #FFFFFF" />
+    <div id="colorPreview"></div>
+    <br /><br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const colorInput = document.getElementById('colorInput');
+    const colorPreview = document.getElementById('colorPreview');
+    const colorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
+    function updatePreview() {
+      const value = colorInput.value.trim();
+      if (colorRegex.test(value)) {
+        colorInput.classList.add('valid');
+        colorInput.classList.remove('invalid');
+        colorPreview.style.backgroundColor = value;
+      } else {
+        colorInput.classList.add('invalid');
+        colorInput.classList.remove('valid');
+        colorPreview.style.backgroundColor = 'transparent';
+      }
+    }
+
+    colorInput.addEventListener('input', updatePreview);
+
+    document.getElementById('colorForm').addEventListener('submit', e => {
+      if (!colorRegex.test(colorInput.value.trim())) {
+        e.preventDefault();
+        alert('Please enter a valid hexadecimal color code.');
+        colorInput.focus();
+      } else {
+        alert('Form submitted successfully!');
+      }
+    });
+  </script>
+</body>
+</html>
